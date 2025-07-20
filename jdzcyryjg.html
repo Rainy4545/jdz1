@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景德镇陶瓷产业人员结构分析 | 青花瓷韵 @南京师范大学"念念有瓷"团队</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8fbff 0%, #e6f0ff 100%);
+            color: #1a3d7c;
+            line-height: 1.8;
+            font-family: 'Noto Serif SC', serif;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M20,20 Q40,10 60,20 T80,30 Q90,50 80,70 T60,80 Q40,90 20,80 T10,60 Q5,40 10,20 Z" fill="none" stroke="%231a3d7c" stroke-width="1"/></svg>');
+            background-size: 200px;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* 青花瓷顶部装饰 */
+        .blue-white-top {
+            height: 80px;
+            background: linear-gradient(90deg, #1a3d7c, #2a5c9e, #1a3d7c);
+            border-radius: 50% 50% 0 0;
+            margin: 0 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .blue-white-top::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 20%;
+            width: 60%;
+            height: 40px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            border-radius: 10px;
+        }
+        
+        /* 头部样式 */
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            margin: 0 20px;
+            background: linear-gradient(to bottom, #ffffff, #f0f7ff);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 10px 30px rgba(26, 61, 124, 0.2);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #2a5c9e;
+            border-top: none;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #1a3d7c, #2a5c9e, #1a3d7c);
+        }
+        
+        .title-group {
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            color: #1a3d7c;
+            text-shadow: 2px 2px 4px rgba(26, 61, 124, 0.2);
+            font-family: 'Ma Shan Zheng', cursive;
+            letter-spacing: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #2a5c9e;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .subtitle::before, .subtitle::after {
+            content: "❖";
+            margin: 0 15px;
+            color: #1a3d7c;
+            font-size: 1.2rem;
+        }
+        
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="5" y="5" width="90" height="90" rx="10" fill="none" stroke="%231a3d7c" stroke-width="2" stroke-dasharray="8,4"/><text x="50" y="55" font-family="Arial" font-size="20" fill="%231a3d7c" text-anchor="middle">景德镇</text></svg>');
+            opacity: 0.6;
+            transform: rotate(15deg);
+        }
+        
+        /* 主体内容 */
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .chart-section {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(to bottom, #ffffff, #f0f7ff);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(26, 61, 124, 0.15);
+            border: 1px solid #2a5c9e;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-section::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: 80px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30,30 Q50,10 70,30 T90,30 Q90,50 80,70 T60,80 Q40,90 20,80 T10,60 Q5,40 10,20 Z" fill="none" stroke="%232a5c9e" stroke-width="1" opacity="0.3"/></svg>');
+            background-size: contain;
+            opacity: 0.2;
+        }
+        
+        .chart-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #2a5c9e;
+        }
+        
+        .chart-header i {
+            font-size: 32px;
+            color: #1a3d7c;
+            margin-right: 15px;
+            background: #f0f7ff;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid #2a5c9e;
+        }
+        
+        .chart-header h2 {
+            font-size: 1.8rem;
+            color: #1a3d7c;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .chart-container {
+            height: 400px;
+            position: relative;
+        }
+        
+        .info-section {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(to bottom, #ffffff, #f0f7ff);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(26, 61, 124, 0.15);
+            border: 1px solid #2a5c9e;
+        }
+        
+        .data-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 247, 255, 0.8) 100%);
+            border-left: 4px solid #1a3d7c;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(3px);
+        }
+        
+        .data-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M20,20 L40,20 L40,40 L20,40 Z" fill="%231a3d7c"/></svg>');
+            background-size: 50px;
+        }
+        
+        .data-card h3 {
+            color: #1a3d7c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .data-card h3 i {
+            margin-right: 10px;
+            background: #f0f7ff;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid #2a5c9e;
+        }
+        
+        .data-card ul {
+            padding-left: 30px;
+        }
+        
+        .data-card li {
+            margin-bottom: 12px;
+            position: relative;
+            font-size: 1.05rem;
+        }
+        
+        .data-card li::before {
+            content: "❖";
+            color: #1a3d7c;
+            font-weight: bold;
+            position: absolute;
+            left: -25px;
+            font-size: 1.2rem;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .grid-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            padding: 20px 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(26, 61, 124, 0.1);
+            border: 1px solid #2a5c9e;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(26, 61, 124, 0.2);
+        }
+        
+        .grid-item i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #1a3d7c;
+        }
+        
+        .grid-item .value {
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: #1a3d7c;
+            margin: 10px 0;
+            text-shadow: 1px 1px 2px rgba(26, 61, 124, 0.2);
+        }
+        
+        .grid-item .label {
+            font-size: 1.1rem;
+            color: #2a5c9e;
+            font-weight: 500;
+        }
+        
+        /* 表格区域 */
+        .table-section {
+            background: linear-gradient(to bottom, #ffffff, #f0f7ff);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(26, 61, 124, 0.15);
+            margin: 40px 0;
+            border: 1px solid #2a5c9e;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .table-section::before {
+            content: "";
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,20 Q40,10 60,20 T80,30 Q90,50 80,70 T60,80 Q40,90 20,80 T10,60 Q5,40 10,20 Z" fill="none" stroke="%232a5c9e" stroke-width="1" opacity="0.2"/></svg>');
+            background-size: contain;
+            opacity: 0.1;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #2a5c9e;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #2a5c9e;
+            border-right: 1px solid #2a5c9e;
+        }
+        
+        th {
+            background-color: rgba(26, 61, 124, 0.1);
+            font-weight: 700;
+            color: #1a3d7c;
+            font-size: 1.1rem;
+        }
+        
+        td {
+            font-size: 1.05rem;
+        }
+        
+        tr:hover {
+            background-color: rgba(240, 247, 255, 0.7);
+        }
+        
+        .color-sample {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 10px;
+            border: 1px solid #2a5c9e;
+        }
+        
+        /* 陶瓷文化介绍 */
+        .culture-section {
+            background: linear-gradient(to bottom, #ffffff, #f0f7ff);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 8px 25px rgba(26, 61, 124, 0.15);
+            border: 1px solid #2a5c9e;
+            position: relative;
+        }
+        
+        .culture-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #2a5c9e;
+        }
+        
+        .culture-header i {
+            font-size: 32px;
+            color: #1a3d7c;
+            margin-right: 15px;
+        }
+        
+        .culture-header h2 {
+            font-size: 1.8rem;
+            color: #1a3d7c;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .culture-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .culture-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .culture-text p {
+            margin-bottom: 20px;
+            text-align: justify;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .culture-features {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-list li {
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+        }
+        
+        .feature-list li::before {
+            content: "❖";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #1a3d7c;
+            font-size: 1.5rem;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            color: #1a3d7c;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        /* 底部区域 */
+        .footer-note {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 247, 255, 0.8) 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 40px 0;
+            font-size: 1rem;
+            border-left: 4px solid #1a3d7c;
+            box-shadow: 0 5px 15px rgba(26, 61, 124, 0.1);
+            border: 1px solid #2a5c9e;
+            position: relative;
+        }
+        
+        .footer-note::after {
+            content: "";
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%231a3d7c" stroke-width="2" opacity="0.1"/></svg>');
+        }
+        
+        .blue-white-bottom {
+            height: 60px;
+            background: linear-gradient(90deg, #1a3d7c, #2a5c9e, #1a3d7c);
+            border-radius: 0 0 50% 50%;
+            margin: 0 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .blue-white-bottom::before {
+            content: "";
+            position: absolute;
+            bottom: 20px;
+            left: 20%;
+            width: 60%;
+            height: 30px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            border-radius: 10px;
+        }
+        
+        /* 青花瓷装饰元素 */
+        .blue-white-decoration {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30,30 Q50,15 70,30 T90,50 Q85,70 70,75 T50,90 Q30,85 25,70 T15,50 Q20,30 30,30 Z" fill="none" stroke="%231a3d7c" stroke-width="2" opacity="0.3"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+        
+        .dec-1 {
+            top: 5%;
+            left: 5%;
+        }
+        
+        .dec-2 {
+            bottom: 10%;
+            right: 5%;
+            transform: rotate(45deg);
+        }
+        
+        .dec-3 {
+            top: 40%;
+            left: 10%;
+            transform: rotate(-15deg);
+            opacity: 0.2;
+        }
+        
+        .dec-4 {
+            bottom: 30%;
+            right: 10%;
+            transform: rotate(75deg);
+            opacity: 0.2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .culture-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .stamp {
+                right: 20px;
+                width: 80px;
+                height: 80px;
+            }
+            
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blue-white-decoration dec-1"></div>
+    <div class="blue-white-decoration dec-2"></div>
+    <div class="blue-white-decoration dec-3"></div>
+    <div class="blue-white-decoration dec-4"></div>
+    
+    <div class="blue-white-top"></div>
+    
+    <div class="container">
+        <header>
+            <div class="stamp"></div>
+            <div class="title-group">
+                <h1>景德镇陶瓷产业</h1>
+                <p class="subtitle">从业人员结构分析 @南京师范大学"念念有瓷"团队</p>
+                <p>千年瓷都 · 青花雅韵 | 数据来源：景德镇陶瓷产业发展中心</p>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="chart-section">
+                <div class="chart-header">
+                    <i class="fas fa-chart-pie"></i>
+                    <h2>从业人员结构分布</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="structureChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="data-card">
+                    <h3><i class="fas fa-industry"></i> 核心产业特征</h3>
+                    <ul>
+                        <li><strong>技能人才基础</strong>：38%从业人员为各类陶瓷技能人才，平均年龄45岁以上</li>
+                        <li><strong>专业人才支撑</strong>：25%为专业技术人员，推动新型材料研发</li>
+                        <li><strong>高技能人才引领</strong>：18%为高技能人才，其中75%年龄在35岁以下</li>
+                        <li><strong>非遗传承保护</strong>：各级非遗传承人占比9%，平均年龄55岁以上</li>
+                        <li><strong>人才结构变化</strong>：大专及以上学历占比从2015年19%升至2025年45%</li>
+                        <li><strong>数字化转型</strong>：电商直播销售岗位年增长42%</li>
+                    </ul>
+                </div>
+                
+                <div class="data-card">
+                    <h3><i class="fas fa-users"></i> 人员特征分布</h3>
+                    <div class="data-grid">
+                        <div class="grid-item">
+                            <i class="fas fa-male"></i>
+                            <div class="value">48%</div>
+                            <div class="label">男性从业者</div>
+                        </div>
+                        <div class="grid-item">
+                            <i class="fas fa-female"></i>
+                            <div class="value">52%</div>
+                            <div class="label">女性从业者</div>
+                        </div>
+                        <div class="grid-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div class="value">45%</div>
+                            <div class="label">大专及以上学历</div>
+                        </div>
+                        <div class="grid-item">
+                            <i class="fas fa-globe-asia"></i>
+                            <div class="value">13,500+</div>
+                            <div class="label">"景漂"艺术家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-section">
+            <div class="chart-header">
+                <i class="fas fa-table"></i>
+                <h2>从业人员结构数据表</h2>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>岗位类别</th>
+                        <th>占比</th>
+                        <th>主要职能</th>
+                        <th>发展趋势</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="color-sample" style="background-color: #1a3d7c;"></span> 各类陶瓷技能人才</td>
+                        <td>38%</td>
+                        <td>拉坯、利坯、施釉、绘画等传统工艺</td>
+                        <td>传统技艺传承，平均年龄45岁以上</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background-color: #2a5c9e;"></span> 陶瓷行业专业技术人员</td>
+                        <td>25%</td>
+                        <td>材料研发、工艺技术、质量检测</td>
+                        <td>技术骨干平均从业年限12年</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background-color: #4a7bc1;"></span> 陶瓷行业高技能人才</td>
+                        <td>18%</td>
+                        <td>产品设计、艺术创作、技术创新</td>
+                        <td>35岁以下占75%，院校毕业生为主</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background-color: #6a9de8;"></span> 各级非遗传承人</td>
+                        <td>9%</td>
+                        <td>传统工艺传承与保护</td>
+                        <td>平均年龄55+，急需传承人培养</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background-color: #8ab8f1;"></span> 其他类型</td>
+                        <td>10%</td>
+                        <td>管理、营销、物流等辅助岗位</td>
+                        <td>电商直播岗位年增42%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="culture-section">
+            <div class="culture-header">
+                <i class="fas fa-landmark"></i>
+                <h2>景德镇陶瓷文化</h2>
+            </div>
+            <div class="culture-content">
+                <div class="culture-text">
+                    <p>景德镇，古称"昌南"，拥有1700多年的制瓷历史，素有"瓷都"之称。自宋代以来，景德镇瓷器以"白如玉、明如镜、薄如纸、声如磬"的独特品质享誉世界。青花瓷作为景德镇最具代表性的陶瓷艺术，始于元代，盛于明清，以其典雅的蓝色纹饰和洁白的胎体成为中华文化的象征。</p>
+                    
+                    <p>景德镇制瓷工艺包含72道工序，从采石制泥、拉坯成型，到绘画施釉、入窑烧制，每一环节都凝聚着匠人的智慧与心血。其中青花瓷制作尤为复杂，需经过设计图样、勾线分水、施釉烧成等多道工艺，方能呈现"青花分五色"的艺术效果。</p>
+                    
+                    <p>如今的景德镇，既传承了千年制瓷工艺，又融合了现代艺术设计，形成了传统工艺与现代创新并存的产业格局。陶瓷产业从业人员结构的变化，正是这一古老行业在新时代焕发新生的生动写照。</p>
+                </div>
+                
+                <div class="culture-features">
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title">青花瓷艺术</div>
+                            <div>钴料在釉下绘制纹饰，经高温烧制后呈现青蓝色，纹饰永不褪色</div>
+                        </li>
+                        <li>
+                            <div class="feature-title">传统工艺</div>
+                            <div>72道制瓷工序，包括采石、制泥、拉坯、利坯、画坯、施釉、烧窑等</div>
+                        </li>
+                        <li>
+                            <div class="feature-title">四大名瓷</div>
+                            <div>青花瓷、玲珑瓷、粉彩瓷、颜色釉瓷并称景德镇四大传统名瓷</div>
+                        </li>
+                        <li>
+                            <div class="feature-title">非遗传承</div>
+                            <div>景德镇手工制瓷技艺于2006年被列入国家级非物质文化遗产</div>
+                        </li>
+                        <li>
+                            <div class="feature-title">现代创新</div>
+                            <div>3D打印陶瓷技术、新型环保釉料、数字艺术设计等推动产业升级</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            <p><strong>注：</strong>本数据基于行业趋势预估，结合景德镇陶瓷产业发展中心2025年预测数据。实际从业人员结构可能因统计口径、产业政策调整及市场变化存在差异。数据更新来源于"念念有瓷"团队搜集。</p>
+            <p style="margin-top: 15px; text-align: right; font-style: italic; color: #1a3d7c;">青花传千年 · 瓷韵续新篇</p>
+        </div>
+    </div>
+    
+    <div class="blue-white-bottom"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('structureChart').getContext('2d');
+            
+            // 饼图数据
+            const data = {
+                labels: [
+                    '各类陶瓷技能人才',
+                    '陶瓷行业专业技术人员',
+                    '陶瓷行业高技能人才',
+                    '各级非遗传承人',
+                    '其他类型'
+                ],
+                datasets: [{
+                    data: [38, 25, 18, 9, 10],
+                    backgroundColor: [
+                        '#1a3d7c', // 深青花蓝
+                        '#2a5c9e', // 青花蓝
+                        '#4a7bc1', // 中青花蓝
+                        '#6a9de8', // 浅青花蓝
+                        '#8ab8f1'  // 淡青花蓝
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                    hoverOffset: 20
+                }]
+            };
+            
+            // 图表配置
+            const config = {
+                type: 'pie',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    family: "'Noto Serif SC', serif"
+                                },
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map(function(label, i) {
+                                            const meta = chart.getDatasetMeta(0);
+                                            const style = meta.controller.getStyle(i);
+                                            
+                                            return {
+                                                text: label + ': ' + data.datasets[0].data[i] + '%',
+                                                fillStyle: style.backgroundColor,
+                                                strokeStyle: style.borderColor,
+                                                lineWidth: style.borderWidth,
+                                                hidden: !chart.getDataVisibility(i),
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(26, 61, 124, 0.85)',
+                            titleFont: {
+                                family: "'Noto Serif SC', serif",
+                                size: 16
+                            },
+                            bodyFont: {
+                                family: "'Noto Serif SC', serif",
+                                size: 14
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value}%`;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: '景德镇陶瓷产业从业人员结构',
+                            font: {
+                                size: 18,
+                                weight: 'bold',
+                                family: "'Noto Serif SC', serif"
+                            },
+                            padding: 20,
+                            color: '#1a3d7c'
+                        }
+                    }
+                }
+            };
+            
+            // 在饼图上直接绘制百分比标签
+            Chart.register({
+                id: 'datalabels',
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    const datasets = chart.data.datasets;
+                    
+                    // 确保有数据
+                    if (datasets.length === 0) return;
+                    
+                    const meta = chart.getDatasetMeta(0);
+                    const total = datasets[0].data.reduce((a, b) => a + b, 0);
+                    
+                    // 绘制每个扇区的标签
+                    meta.data.forEach((element, index) => {
+                        // 获取扇区中心坐标
+                        const centerX = element.tooltipPosition().x;
+                        const centerY = element.tooltipPosition().y;
+                        
+                        // 计算百分比
+                        const value = datasets[0].data[index];
+                        const percentage = Math.round((value / total) * 100);
+                        
+                        // 设置文本样式
+                        ctx.save();
+                        ctx.font = 'bold 16px "Noto Serif SC", serif';
+                        ctx.fillStyle = '#ffffff';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        // 添加文字阴影
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                        ctx.shadowBlur = 3;
+                        ctx.shadowOffsetX = 1;
+                        ctx.shadowOffsetY = 1;
+                        
+                        // 绘制文本
+                        ctx.fillText(percentage + '%', centerX, centerY);
+                        
+                        ctx.restore();
+                    });
+                }
+            });
+            
+            // 渲染图表
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
